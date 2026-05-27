@@ -7,6 +7,14 @@
         "source": "https://github.com/ombre77/WheatBot",
         "authors": ["@_ody77_"],
         "type": "bot"
+    },
+    {
+        "name":"NebulaBot",
+        "desc":"A moderation bot that make things easier and prettier",
+        "version":"1.0",
+        "source":"https://github.com/ombre77/NebulaBot",
+        "authors":["@_ody77_"],
+        "type":"bot"
     }
 ]
 }
