@@ -5,8 +5,8 @@ import custom
 import json
 import os
 from dotenv import load_dotenv
-if os.path.exists("./.env_priv"):
-    load_dotenv(".env_priv")
+if os.path.exists("./.priv_env"):
+    load_dotenv(".priv_env")
 else:
     load_dotenv(".env")
 
