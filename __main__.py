@@ -109,6 +109,96 @@ async def print_projects(interaction: discord.Interaction):
 
     await interaction.response.send_message(embed=message.render())
 
+@bot.tree.command(name="addproject", description="Add a project")
+@app_commands.describe(
+    name="Project name",
+    desc="Description",
+    version="Version",
+    source="Source URL",
+    authors="Authors (comma separated)",
+    ptype="Type"
+    )
+async def addproject(
+    interaction: discord.Interaction,
+    name: str,
+    desc: str,
+    version: str,
+    source: str,
+    authors: str,
+    ptype: str
+    ):
+    if not await custom.MessageHelper.role_check(interaction, custom.MessageHelper.default_ops):
+        return
+
+    file = custom.JSON_map(fget("projects"))
+    file.load()
+
+    new_project = {
+        "name": name,
+        "desc": desc,
+        "version": version,
+        "source": source,
+        "authors": [a.strip() for a in authors.split(",")],
+        "type": ptype
+    }
+    file.map.append(new_project)
+    with open(file.path, "w") as f:
+        json.dump({"map": file.map}, f, indent=4)
+    await interaction.response.send_message(f"Project `{name}` added.", ephemeral=True)
+
+@bot.tree.command(name="delproject", description="Delete a project")
+async def delproject(interaction: discord.Interaction, name: str):
+    if not await custom.MessageHelper.role_check(interaction, custom.MessageHelper.default_ops):
+        return
+    file = custom.JSON_map(fget("projects"))
+    file.load()
+    original_len = len(file.map)
+    file.map = [p for p in file.map if p["name"] != name]
+    if len(file.map) == original_len:
+        await interaction.response.send_message(f"Project `{name}` not found.", ephemeral=True)
+        return
+    with open(file.path, "w") as f:
+        json.dump({"map": file.map}, f, indent=4)
+    await interaction.response.send_message(f"Project `{name}` deleted.", ephemeral=True)
+
+@bot.tree.command(name="modproject", description="Modify a project field")
+@app_commands.describe(
+    name="Project name",
+    category="Field to modify (name, desc, version, source, authors, type)",
+    new_value="New value"
+)
+async def modproject(
+    interaction: discord.Interaction,
+    name: str,
+    category: str,
+    new_value: str
+):
+    if not await custom.MessageHelper.role_check(interaction, custom.MessageHelper.default_ops):
+        return
+    file = custom.JSON_map(fget("projects"))
+    file.load()
+    project = next((p for p in file.map if p["name"] == name), None)
+    if not project:
+        await interaction.response.send_message(f"Project `{name}` not found.", ephemeral=True)
+        return
+    if category not in project:
+        await interaction.response.send_message(
+            f"Invalid category. Use: name, desc, version, source, authors, type",
+            ephemeral=True
+        )
+        return
+    # special case authors
+    if category == "authors":
+        project[category] = [a.strip() for a in new_value.split(",")]
+    else:
+        project[category] = new_value
+    with open(file.path, "w") as f:
+        json.dump({"map": file.map}, f, indent=4)
+    await interaction.response.send_message(
+        f"Project `{name}` updated: `{category}` → `{new_value}`",
+        ephemeral=True
+    )
+
 if __name__ == "__main__":
     TOKEN = os.getenv("BOT_ID")
     bot.run(TOKEN)
