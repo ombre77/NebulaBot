@@ -1,14 +1,16 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-import custom
+import src.custom as custom
+from src.files import fget
 import json
 import os
 from dotenv import load_dotenv
-if os.path.exists("./.priv_env"):
-    load_dotenv(".priv_env")
+
+if os.path.exists(fget(".priv_env")):
+    load_dotenv(fget(".priv_env"))
 else:
-    load_dotenv(".env")
+    load_dotenv(fget(".env"))
 
 GUILD_IDS = [
     int(guild_id)
@@ -43,9 +45,9 @@ async def on_ready():
 @app_commands.describe(
     title="Title",
     message="Content",
-    color="Color code (examples: gold(default),red,yellow,..)"
+    color="Color code (examples: dark_purple(default),red,yellow,..)"
 )
-async def announce(interaction:discord.Interaction,title:str,message:str,color:str="gold"):
+async def announce(interaction:discord.Interaction,title:str,message:str,color:str="dark_purple"):
     if not custom.MessageHelper.role_check(interaction,custom.MessageHelper.default_ops):
         return
     custom.LogCommand.log("announce",interaction.user)
@@ -55,25 +57,25 @@ async def announce(interaction:discord.Interaction,title:str,message:str,color:s
 
     await interaction.response.send_message(embed=embed.render())
 
-@bot.tree.command(name="setversion",description="Set the Wheat Game version")
+@bot.tree.command(name="setversion",description="Set the version")
 async def setversion(interaction:discord.Interaction,new_version:str):
     if not custom.MessageHelper.role_check(interaction,custom.MessageHelper.default_ops):
         return
-    file=custom.JSON_map("./.game_infos.json")
+    file=custom.JSON_map(fget("infos"))
     file.load()
     old=file.map["version"]
-    custom.Json_set.path="./.game_infos.json"
+    custom.Json_set.path=fget("infos")
     custom.Json_set.set("version",new_version)
     await interaction.response.send_message(f"Version has been set from {old} to {new_version}!",ephemeral=True)
 
-@bot.tree.command(name="setname",description="Set the Wheat Game version name")
+@bot.tree.command(name="setname",description="Set the version name")
 async def setversion(interaction:discord.Interaction,new_name:str):
     if not custom.MessageHelper.role_check(interaction,custom.MessageHelper.default_ops):
         return
-    file=custom.JSON_map("./.game_infos.json")
+    file=custom.JSON_map(fget("infos"))
     file.load()
     old=file.map["name"]
-    custom.Json_set.path="./.game_infos.json"
+    custom.Json_set.path=fget("infos")
     custom.Json_set.set("name",new_name)
     await interaction.response.send_message(f"Version has been set from {old} to {new_name}!",ephemeral=True)
 
