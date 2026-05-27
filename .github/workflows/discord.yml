@@ -1,0 +1,14 @@
+on:
+  push:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send discord message
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{"content": "New update on GitHub for **NebulaBot**! <@&1509225582527910088>"}' \
+          ${{ secrets.DISCORD_WEBHOOK }}
