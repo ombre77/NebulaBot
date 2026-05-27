@@ -65,8 +65,7 @@ class LogCommand:
 
 class MessageHelper:
     default_ops=["|[-Owner-]|","[-Mod-]"]
-    from colors import COLOR_MAP
-    COLOR_MAP=COLOR_MAP
+
     @staticmethod
     async def role_check(interaction:discord.Interaction,role:str|list[str]="[-Mod-]"):
         if isinstance(role,list):

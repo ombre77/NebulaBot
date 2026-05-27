@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 import src.custom as custom
+from src.colors import COLOR_MAP
 from src.files import fget
 import json
 import os
@@ -51,7 +52,7 @@ async def announce(interaction:discord.Interaction,title:str,message:str,color:s
     if not custom.MessageHelper.role_check(interaction,custom.MessageHelper.default_ops):
         return
     custom.LogCommand.log("announce",interaction.user)
-    clr=custom.MessageHelper.COLOR_MAP.get(color,discord.Color.gold())
+    clr=COLOR_MAP.get(color,discord.Color.gold())
     embed=custom.Message(title,clr,f"{custom.MessageHelper.gamename()}-{custom.MessageHelper.version()}")
     embed.add_category("",message,bold=True)
 
