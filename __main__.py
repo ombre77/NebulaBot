@@ -1,9 +1,9 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-import custom as custom
-from colors import COLOR_MAP
-from files import fget
+import src.custom as custom
+from src.colors import COLOR_MAP
+from src.files import fget
 import json
 import os
 from dotenv import load_dotenv
