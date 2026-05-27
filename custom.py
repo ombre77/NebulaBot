@@ -67,27 +67,21 @@ class MessageHelper:
     default_ops=["|[-Owner-]|","[-Mod-]"]
 
     @staticmethod
-    async def role_check(interaction:discord.Interaction,role:str|list[str]="[-Mod-]"):
-        if isinstance(role,list):
-            can_execute=False
-            for r in role:
-                is_role = discord.utils.get(
-                    interaction.user.roles,
-                    name=r
-                )
-                if is_role is not None:
-                    can_execute=True
-                    break
-            if can_execute:
-                is_role=True
-        else:
-            is_role = discord.utils.get(
-                interaction.user.roles,
-                name=role
+    async def role_check(interaction: discord.Interaction, role: str | list[str] = "[-Mod-]"):
+        user_roles = [r.name for r in interaction.user.roles]
+
+        if isinstance(role, str):
+            role = [role,]
+
+        has_permission = any(r in user_roles for r in role)
+
+        if not has_permission:
+            await interaction.response.send_message(
+                "You do not have the permission required to execute this",
+                ephemeral=True
             )
-        if is_role is None:
-            await interaction.response.send_message("You do not have the permission required to execute this",ephemeral=True)
             return False
+
         return True
     
     @staticmethod

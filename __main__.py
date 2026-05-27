@@ -46,7 +46,7 @@ async def on_ready():
     color="Color code (examples: dark_purple(default),red,yellow,..)"
 )
 async def announce(interaction:discord.Interaction,title:str,message:str,color:str="dark_purple"):
-    if not custom.MessageHelper.role_check(interaction,custom.MessageHelper.default_ops):
+    if not await custom.MessageHelper.role_check(interaction,custom.MessageHelper.default_ops):
         return
     custom.LogCommand.log("announce",interaction.user)
     clr=COLOR_MAP.get(color,discord.Color.gold())
@@ -57,7 +57,7 @@ async def announce(interaction:discord.Interaction,title:str,message:str,color:s
 
 @bot.tree.command(name="setversion",description="Set the version")
 async def setversion(interaction:discord.Interaction,new_version:str):
-    if not custom.MessageHelper.role_check(interaction,custom.MessageHelper.default_ops):
+    if not await custom.MessageHelper.role_check(interaction,custom.MessageHelper.default_ops):
         return
     file=custom.JSON_map(fget("infos"))
     file.load()
@@ -68,7 +68,7 @@ async def setversion(interaction:discord.Interaction,new_version:str):
 
 @bot.tree.command(name="setname",description="Set the version name")
 async def setversionname(interaction:discord.Interaction,new_name:str):
-    if not custom.MessageHelper.role_check(interaction,custom.MessageHelper.default_ops):
+    if not await custom.MessageHelper.role_check(interaction, custom.MessageHelper.default_ops):
         return
     file=custom.JSON_map(fget("infos"))
     file.load()
