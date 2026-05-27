@@ -99,11 +99,11 @@ async def print_projects(interaction: discord.Interaction):
 
         title = f"*{idx+1}* - **{name}**"
         content = f"""{desc}
-    type: {ptype}
-    version: {version}
-    authors: {authors}
-    {source}
-"""
+                        - type: {ptype}
+                        - version: {version}
+                        - authors: {authors}
+                        - {source}
+                """
         message.add_category(title, content)
 
     await interaction.response.send_message(embed=message.render())
