@@ -73,7 +73,7 @@ class MessageHelper:
             for r in role:
                 is_role = discord.utils.get(
                     interaction.user.roles,
-                    name=role
+                    name=r
                 )
                 if is_role is not None:
                     can_execute=True

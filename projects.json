@@ -1,0 +1,12 @@
+{
+    "map": [
+    {
+        "name": "WheatBot",
+        "desc": "A util bot for the WheatGame DiamondFire game",
+        "version": "1.0",
+        "source": "https://github.com/ombre77/WheatBot",
+        "authors": ["@_ody77_"],
+        "type": "bot"
+    }
+]
+}

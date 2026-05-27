@@ -37,9 +37,6 @@ async def on_ready():
         synced = await bot.tree.sync(guild=guild)
         print(f"Synced {len(synced)} commands to {guild_id}")
 
-    synced = await bot.tree.sync(guild=guild)
-
-    print(f"Synced {len(synced)} commands")
     print(f"Connected as {bot.user}")
 
 @bot.tree.command(name="announce",description="Make fancy announcements")
@@ -70,7 +67,7 @@ async def setversion(interaction:discord.Interaction,new_version:str):
     await interaction.response.send_message(f"Version has been set from {old} to {new_version}!",ephemeral=True)
 
 @bot.tree.command(name="setname",description="Set the version name")
-async def setversion(interaction:discord.Interaction,new_name:str):
+async def setversionname(interaction:discord.Interaction,new_name:str):
     if not custom.MessageHelper.role_check(interaction,custom.MessageHelper.default_ops):
         return
     file=custom.JSON_map(fget("infos"))
@@ -79,6 +76,37 @@ async def setversion(interaction:discord.Interaction,new_name:str):
     custom.Json_set.path=fget("infos")
     custom.Json_set.set("name",new_name)
     await interaction.response.send_message(f"Version has been set from {old} to {new_name}!",ephemeral=True)
+
+@bot.tree.command(name="print_projects", description="Print all projects")
+async def print_projects(interaction: discord.Interaction):
+    file = custom.JSON_map(fget("projects"))
+    file.load()
+    projects = file.map
+
+    message = custom.Message(
+        "**Projects**",
+        COLOR_MAP["dark_purple"],
+        f"{custom.MessageHelper.gamename()}-{custom.MessageHelper.version()}"
+    )
+
+    for idx, project in enumerate(projects):
+        name = project["name"]
+        version = project["version"]
+        source = project["source"]
+        desc = project["desc"]
+        authors = ", ".join(project["authors"])
+        ptype = project["type"]
+
+        title = f"*{idx+1}* - **{name}**"
+        content = f"""{desc}
+    type: {ptype}
+    version: {version}
+    authors: {authors}
+    {source}
+"""
+        message.add_category(title, content)
+
+    await interaction.response.send_message(embed=message.render())
 
 if __name__ == "__main__":
     TOKEN = os.getenv("BOT_ID")
